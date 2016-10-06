@@ -1,0 +1,136 @@
+[
+  {
+    "fields": {
+      "position": "51.26219992835117,0.5586191431274301",
+      "name": "River Start"
+    },
+    "pk": 1,
+    "model": "dashboard.site"
+  },
+  {
+    "fields": {
+      "position": "51.265529777404424,0.5379768625488168",
+      "name": "Leisure Center"
+    },
+    "pk": 2,
+    "model": "dashboard.site"
+  },
+  {
+    "fields": {
+      "position": "51.26810755937987,0.5475898996581918",
+      "name": "Cano Hut"
+    },
+    "pk": 3,
+    "model": "dashboard.site"
+  },
+  {
+    "fields": {
+      "description": null,
+      "eu_limit": null,
+      "unit": "ug\/m3",
+      "name": "PM 1",
+      "order": 0
+    },
+    "pk": 1,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 25,
+      "unit": "ug\/m3",
+      "name": "PM 2.5",
+      "order": 1
+    },
+    "pk": 2,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 50,
+      "unit": "ug\/m3",
+      "name": "PM 10",
+      "order": 2
+    },
+    "pk": 3,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 200,
+      "unit": "ug\/m3",
+      "name": "Nitrogen dioxide",
+      "order": 3
+    },
+    "pk": 4,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": null,
+      "eu_limit": null,
+      "unit": "ug\/m3",
+      "name": "Nitrogen oxide",
+      "order": 4
+    },
+    "pk": 5,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 10,
+      "unit": "mg\/m3",
+      "name": "Carbon monoxide",
+      "order": 5
+    },
+    "pk": 6,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 120,
+      "unit": "ug\/m3",
+      "name": "Ozone",
+      "order": 6
+    },
+    "pk": 7,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 350,
+      "unit": "ug\/m3",
+      "name": "Sulfur dioxide",
+      "order": 7
+    },
+    "pk": 8,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 22,
+      "unit": "\u00b0 C",
+      "name": "Temperature",
+      "order": 8
+    },
+    "pk": 9,
+    "model": "dashboard.metric"
+  },
+  {
+    "fields": {
+      "description": "",
+      "eu_limit": 50,
+      "unit": "%",
+      "name": "Humidity",
+      "order": 9
+    },
+    "pk": 10,
+    "model": "dashboard.metric"
+  }
+]
