@@ -1,7 +1,7 @@
 import nexmo
 from datetime import datetime
 from django.conf import settings
-from rleaf_sensor_managment.sensors.models import Reading, Metric, Site
+from sensor_portal.sensors.models import Reading, Metric, Site
 
 def verify_webhook(body):
     if not settings.NEXMO_API['WEBHOOK_SIGNATURE_VALIDATION']:

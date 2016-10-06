@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class NexmoConfig(AppConfig):
-    name = 'rleaf_sensor_managment.nexmo'
+    name = 'sensor_portal.nexmo'
 
     NEXMO_API = {
         'SIGNATURE_SECRET': '',

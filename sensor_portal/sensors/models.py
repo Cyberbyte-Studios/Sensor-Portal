@@ -1,5 +1,5 @@
 from django.db import models
-from rleaf_sensor_managment.nexmo.models import Message
+from sensor_portal.nexmo.models import Message
 from ordered_model.models import OrderedModel
 from geoposition.fields import GeopositionField
 

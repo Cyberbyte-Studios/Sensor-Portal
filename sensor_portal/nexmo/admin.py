@@ -1,5 +1,5 @@
 from django.contrib import admin
-from rleaf_sensor_managment.sensors.admin import ReadingInline
+from sensor_portal.sensors.admin import ReadingInline
 from .models import Message
 
 class MessageAdmin(admin.ModelAdmin):
