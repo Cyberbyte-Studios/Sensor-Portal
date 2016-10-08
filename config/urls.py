@@ -7,6 +7,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from django.template import Context, loader
+from django.views.defaults import page_not_found, server_error
+from django.http import HttpResponseServerError
+
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
@@ -39,3 +43,15 @@ if settings.DEBUG:
         urlpatterns += [
             url(r'^__debug__/', include(debug_toolbar.urls)),
         ]
+
+def handler500(request):
+    """500 error handler which includes ``request`` in the context.
+
+    Templates: `500.html`
+    Context: None
+    """
+
+    t = loader.get_template('500.html') # You need to create a 500.html template.
+    return HttpResponseServerError(t.render(Context({
+        'request': request,
+    })))

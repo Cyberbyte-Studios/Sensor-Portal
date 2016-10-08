@@ -2,12 +2,14 @@ from django.db import models
 from sensor_portal.nexmo.models import Message
 from ordered_model.models import OrderedModel
 from geoposition.fields import GeopositionField
+from django.contrib.sites.models import Site
 
-class Site(models.Model):
+class Sensor(models.Model):
     name = models.CharField(max_length=100)
     position = GeopositionField(null=True, blank=True)
     active = models.BooleanField(default=True)
     description = models.TextField(null=True, blank=True)
+    site = models.ForeignKey(Site, )
 
     def __str__(self):
         return self.name
@@ -27,7 +29,7 @@ class Metric(OrderedModel):
 
 
 class Reading(models.Model):
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
     message = models.ForeignKey(Message, null=True, blank=True)
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
     value = models.FloatField()

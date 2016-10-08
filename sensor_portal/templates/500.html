@@ -8,6 +8,18 @@
 <h3>Looks like something went wrong!</h3>
 
 <p>We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing.</p>
+
+{% if request.sentry.id %}
+<p>Your error tracking code is: <strong>{{ request.sentry.id }}</strong></p>
+{% endif %}
 {% endblock content %}
 
+{% block script %}
+  {% if request.sentry.id %}
+  Raven.showReportDialog({
+    eventId: '{{ request.sentry.id }}',
+    dsn: 'https://b9736d7f94ea45d580b6ab72307ebbd5@sentry.io/104341'
+  });
+  {% endif %}
+{% endblock script %}
 

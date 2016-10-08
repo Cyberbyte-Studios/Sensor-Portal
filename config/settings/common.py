@@ -94,7 +94,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.s
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
-    ("""Sam Collins""", 'you@example.com'),
+    ("""Sam Collins""", 'theatrepro11@gmail.com'),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -274,3 +274,5 @@ ADMIN_URL = r'^admin/'
 #SESSION_ENGINE = 'user_sessions.backends.db'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDE5DzzKxdwrLutlDBh1YB56UnsVAJ0ulM'
+
+VERSION = '0.0.1'

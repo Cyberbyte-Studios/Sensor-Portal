@@ -38,8 +38,8 @@ INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
 
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
-#WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
-#MIDDLEWARE = WHITENOISE_MIDDLEWARE + MIDDLEWARE
+WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
+MIDDLEWARE = WHITENOISE_MIDDLEWARE + MIDDLEWARE
 #RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
 #MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
 # opbeat integration
@@ -50,9 +50,9 @@ OPBEAT = {
     'APP_ID': env('DJANGO_OPBEAT_APP_ID'),
     'SECRET_TOKEN': env('DJANGO_OPBEAT_SECRET_TOKEN')
 }
-#MIDDLEWARE = (
-#    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-#) + MIDDLEWARE
+MIDDLEWARE = (
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
+) + MIDDLEWARE
 
 
 # SECURITY CONFIGURATION
@@ -78,7 +78,7 @@ X_FRAME_OPTIONS = 'DENY'
 # ------------------------------------------------------------------------------
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['sensor.cyberbyte.org.uk'])
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['urbanairsensors.com', 'localhost'])
 # END SITE CONFIGURATION
 
 INSTALLED_APPS += ('gunicorn', )
@@ -128,8 +128,8 @@ COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
 # EMAIL
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
-                         default='Sensor Portal <noreply@sensor.cyberbyte.org.uk>')
-EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[Sensor Portal] ')
+                         default='Urban Air Sensors <noreply@urbanairsensors.com>')
+EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[Urban Air] ')
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
 # Anymail with Mailgun
@@ -238,7 +238,8 @@ LOGGING = {
 SENTRY_CELERY_LOGLEVEL = env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO)
 RAVEN_CONFIG = {
     'CELERY_LOGLEVEL': env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO),
-    'DSN': SENTRY_DSN
+    'DSN': SENTRY_DSN,
+    'release': VERSION,
 }
 
 # Custom Admin URL, use {% url 'admin:index' %}
