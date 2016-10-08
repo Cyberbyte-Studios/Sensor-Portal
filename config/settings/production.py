@@ -38,10 +38,10 @@ INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
 
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
-WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
-MIDDLEWARE = WHITENOISE_MIDDLEWARE + MIDDLEWARE
-RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
-MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
+#WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
+#MIDDLEWARE = WHITENOISE_MIDDLEWARE + MIDDLEWARE
+#RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
+#MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
 # opbeat integration
 # See https://opbeat.com/languages/django/
 INSTALLED_APPS += ('opbeat.contrib.django',)
@@ -50,9 +50,9 @@ OPBEAT = {
     'APP_ID': env('DJANGO_OPBEAT_APP_ID'),
     'SECRET_TOKEN': env('DJANGO_OPBEAT_SECRET_TOKEN')
 }
-MIDDLEWARE = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-) + MIDDLEWARE
+#MIDDLEWARE = (
+#    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
+#) + MIDDLEWARE
 
 
 # SECURITY CONFIGURATION

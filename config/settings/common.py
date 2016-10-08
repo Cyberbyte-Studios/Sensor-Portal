@@ -39,7 +39,7 @@ THIRD_PARTY_APPS = (
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
-    'user_sessions', # Better session managment
+#    'user_sessions', # Better session managment
     'rest_framework',
 )
 
@@ -77,7 +77,7 @@ MIGRATION_MODULES = {
 # DEBUG
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DJANGO_DEBUG', False)
+DEBUG = env.bool('DJANGO_DEBUG', True)
 
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -271,6 +271,6 @@ ADMIN_URL = r'^admin/'
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 
-SESSION_ENGINE = 'user_sessions.backends.db'
+#SESSION_ENGINE = 'user_sessions.backends.db'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDE5DzzKxdwrLutlDBh1YB56UnsVAJ0ulM'
