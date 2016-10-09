@@ -99,6 +99,8 @@ AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME')
 AWS_AUTO_CREATE_BUCKET = True
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
+AWS_CLOUDFRONT = env('AWS_MEDIA_CDN', default='s3.amazonaws.com/' +  AWS_STORAGE_BUCKET_NAME);
+AWS_S3_CUSTOM_DOMAIN = AWS_CLOUDFRONT
 
 # AWS cache settings, don't change unless you know what you're doing:
 AWS_EXPIRY = 60 * 60 * 24 * 7
@@ -113,10 +115,7 @@ AWS_HEADERS = {
 
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
-MEDIA_URL = 'https://{}/{}/'.format(
-    env('AWS_MEDIA_CDN', 's3.amazonaws.com'),
-    AWS_STORAGE_BUCKET_NAME
-)
+MEDIA_URL = 'https://{}/'.format(AWS_CLOUDFRONT)
 
 # Static Assets
 # ------------------------

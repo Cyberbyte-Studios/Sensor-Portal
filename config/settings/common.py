@@ -277,3 +277,8 @@ ADMIN_URL = r'^admin/'
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDE5DzzKxdwrLutlDBh1YB56UnsVAJ0ulM'
 
 VERSION = '0.0.2'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
