@@ -61,7 +61,7 @@ MIDDLEWARE = (
 # and https://docs.djangoproject.com/ja/1.9/howto/deployment/checklist/#run-manage-py-check-deploy
 
 # set this to 60 seconds and then to 518400 when you can prove it works
-SECURE_HSTS_SECONDS = 60
+SECURE_HSTS_SECONDS = 518400
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
     'DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
@@ -116,6 +116,7 @@ AWS_HEADERS = {
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
 MEDIA_URL = 'https://{}/'.format(AWS_CLOUDFRONT)
+STATIC_URL = MEDIA_URL
 
 # Static Assets
 # ------------------------
@@ -244,7 +245,7 @@ RAVEN_CONFIG = {
 }
 
 # Custom Admin URL, use {% url 'admin:index' %}
-ADMIN_URL = env('DJANGO_ADMIN_URL')
+ADMIN_URL = '^{}/'.format(env('DJANGO_ADMIN_URL'))
 
 # Your production stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------

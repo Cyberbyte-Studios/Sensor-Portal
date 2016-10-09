@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from django.template import Context, loader
@@ -25,14 +26,21 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
 
+    url(r'^pages/', include('django.contrib.flatpages.urls')),
+
+#    url(r'{}/doc/'.format(settings.ADMIN_URL), include('django.contrib.admindocs.urls')).
+
     # Django Admin, use {% url 'admin:index' %}
-    url(settings.ADMIN_URL, admin.site.urls),
+    url(r'{}'.format(settings.ADMIN_URL), admin.site.urls),
+
+    url(r'{}/password_reset/$'.format(settings.ADMIN_URL), auth_views.password_reset, name='admin_password_reset'),
+    url(r'{}/password_reset/done/$'.format(settings.ADMIN_URL), auth_views.password_reset_done, name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
     # User management
     url(r'^users/', include('sensor_portal.users.urls', namespace='users')),
     url(r'^accounts/', include('allauth.urls')),
-
-    # Your stuff: custom urls includes go here
 
     url(r'^api/v1/', include(router.urls, namespace='v1')),
 
@@ -56,12 +64,10 @@ if settings.DEBUG:
 
 def handler500(request):
     """500 error handler which includes ``request`` in the context.
-
-    Templates: `500.html`
-    Context: None
+    :template:`500.html`
     """
 
-    t = loader.get_template('500.html') # You need to create a 500.html template.
+    t = loader.get_template('500.html')
     return HttpResponseServerError(t.render(Context({
         'request': request,
     })))

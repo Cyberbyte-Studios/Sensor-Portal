@@ -57,3 +57,4 @@ class ReadingViewSet(viewsets.ModelViewSet):
     serializer_class = ReadingSerializer
     search_fields = ('sensor__name', 'message__text', 'value')
     ordering_fields = ('sensor', 'message', 'metric', 'value', 'recorded')
+

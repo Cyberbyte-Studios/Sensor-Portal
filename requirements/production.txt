@@ -26,3 +26,6 @@ raven==5.27.1
 # Opbeat agent for performance monitoring
 # -----------------------------------------
 opbeat==3.4.0
+
+# Even more fancy compression
+brotlipy
