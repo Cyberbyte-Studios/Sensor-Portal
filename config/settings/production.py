@@ -115,8 +115,8 @@ AWS_HEADERS = {
 
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
-MEDIA_URL = 'https://{}/'.format(AWS_CLOUDFRONT)
-STATIC_URL = MEDIA_URL
+MEDIA_URL = 'https://{}/media/'.format(AWS_CLOUDFRONT)
+STATIC_URL = 'https://{}/'.format(AWS_CLOUDFRONT)
 
 # Static Assets
 # ------------------------
