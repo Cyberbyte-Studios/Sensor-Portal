@@ -95,9 +95,7 @@
       <script src="{% static 'js/project.js' %}"></script>
       {% endcompress %}
       <script>
-       {% autoescape off %}
        {% error_reporting %}
-       {% endautoescape %}
           {% block script %}{% endblock script %}
       </script>
     {% endblock javascript %}
