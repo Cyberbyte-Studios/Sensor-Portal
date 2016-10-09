@@ -12,5 +12,5 @@ def error_reporting(scheme=None):
         dsn = client.get_public_dsn(scheme)
         if dsn:
             html = 'Raven.config({}).install();'.format(dsn)
-            return safe_html(html)
+            return mark_safe(html)
     return 'console.warn(\'DEBUG = True\')'
