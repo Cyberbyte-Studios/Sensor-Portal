@@ -11,6 +11,15 @@ from django.template import Context, loader
 from django.views.defaults import page_not_found, server_error
 from django.http import HttpResponseServerError
 
+from sensor_portal.sensors.views import SensorViewSet, MetricViewSet, ReadingViewSet
+from rest_framework import routers
+
+admin.site.site_header = 'Sensor Panel Admin'
+
+router = routers.DefaultRouter()
+router.register(r'sensors', SensorViewSet)
+router.register(r'metrics', MetricViewSet)
+router.register(r'readings', ReadingViewSet)
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
@@ -25,6 +34,7 @@ urlpatterns = [
 
     # Your stuff: custom urls includes go here
 
+    url(r'^api/v1/', include(router.urls, namespace='v1')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

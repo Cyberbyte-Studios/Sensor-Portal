@@ -29,7 +29,7 @@ DJANGO_APPS = (
     'django.contrib.staticfiles',
 
     # Useful template tags:
-    # 'django.contrib.humanize',
+    'django.contrib.humanize',
 
     # Admin
     'django.contrib.admin',
@@ -41,6 +41,7 @@ THIRD_PARTY_APPS = (
     'allauth.socialaccount',  # registration
 #    'user_sessions', # Better session managment
     'rest_framework',
+    'geoposition'
 )
 
 # Apps specific for this project go here.
@@ -275,4 +276,4 @@ ADMIN_URL = r'^admin/'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDE5DzzKxdwrLutlDBh1YB56UnsVAJ0ulM'
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'

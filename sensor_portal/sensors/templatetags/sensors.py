@@ -11,5 +11,6 @@ def error_reporting(scheme=None):
         from raven.contrib.django.models import client
         dsn = client.get_public_dsn(scheme)
         if dsn:
-            return 'Raven.config(' + dsn + ').install()'
+            html = 'Raven.config({}).install();'.format(dsn)
+            return safe_html(html)
     return 'console.warn(\'DEBUG = True\')'
