@@ -58,4 +58,4 @@ djangorestframework
 markdown
 django-filter
 docutils
-argon2-cffi
+argon2-cffi==16.2.0
