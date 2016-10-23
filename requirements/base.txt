@@ -56,6 +56,6 @@ django-geoposition
 django-ordered-model
 djangorestframework
 markdown
-django-filter
+django-filter==0.15.3
 docutils
 argon2-cffi
