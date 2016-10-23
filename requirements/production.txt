@@ -29,3 +29,6 @@ opbeat==3.4.0
 
 # Even more fancy compression
 brotlipy
+
+# Stops replacing assets from S3
+collectfast

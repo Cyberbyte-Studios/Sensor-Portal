@@ -33,8 +33,8 @@ urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     url(r'{}'.format(settings.ADMIN_URL), admin.site.urls),
 
-    url(r'{}/password_reset/$'.format(settings.ADMIN_URL), auth_views.password_reset, name='admin_password_reset'),
-    url(r'{}/password_reset/done/$'.format(settings.ADMIN_URL), auth_views.password_reset_done, name='password_reset_done'),
+    url(r'{}password_reset/$'.format(settings.ADMIN_URL), auth_views.password_reset, name='admin_password_reset'),
+    url(r'{}password_reset/done/$'.format(settings.ADMIN_URL), auth_views.password_reset_done, name='password_reset_done'),
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
