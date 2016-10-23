@@ -28,4 +28,4 @@ raven==5.27.1
 opbeat==3.4.0
 
 # Even more fancy compression
-brotlipy
+brotlipy==0.6.0
