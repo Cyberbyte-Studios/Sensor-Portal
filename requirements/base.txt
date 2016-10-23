@@ -57,5 +57,5 @@ django-ordered-model
 djangorestframework
 markdown
 django-filter
-docutils
+docutils==0.12
 argon2-cffi
