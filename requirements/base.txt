@@ -55,7 +55,7 @@ nexmo==1.4.0
 django-geoposition
 django-ordered-model
 djangorestframework
-markdown
+markdown==2.6.7
 django-filter
 docutils
 argon2-cffi
