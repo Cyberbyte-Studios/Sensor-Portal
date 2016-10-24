@@ -46,6 +46,8 @@ urlpatterns = [
     url(r'^api/v1/', include(router.urls, namespace='v1')),
     url(r'^invitations/', include('invitations.urls', namespace='invitations')),
 
+    url(r'^nexmo/', include('sensor_portal.nexmo.urls', namespace='nexmo')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
