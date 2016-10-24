@@ -41,8 +41,10 @@ urlpatterns = [
     # User management
     url(r'^users/', include('sensor_portal.users.urls', namespace='users')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^', include('allauth_2fa.urls')),
 
     url(r'^api/v1/', include(router.urls, namespace='v1')),
+    url(r'^invitations/', include('invitations.urls', namespace='invitations')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
