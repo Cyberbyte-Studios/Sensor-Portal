@@ -27,4 +27,3 @@ brotlipy
 
 # Stops replacing assets from S3
 collectfast
-django-ses
