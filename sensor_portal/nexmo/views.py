@@ -13,9 +13,11 @@ def webhook(request):
     # if not verify_webhook(request):
     #     return HttpResponse('403 error')
 
+    number = Number.object.get(number=request.GET.get('to'))
+
     message = Message(
         nexmo_id=request.GET.get('messageId'),
-        to=request.GET.get('to'),
+        to=number,
         msisdn=request.GET.get('msisdn'),
         text=request.GET.get('text'),
         received=request.GET.get('message-timestamp'),
@@ -41,9 +43,9 @@ def webhook(request):
 
     for metric in metrics:
         readings.append(Reading(
-            sensor = sensor.id,
-            message = message.id,
-            metric = metric.id,
+            sensor = sensor,
+            message = message,
+            metric = metric,
             value = values[index],
         ))
         index += 1
