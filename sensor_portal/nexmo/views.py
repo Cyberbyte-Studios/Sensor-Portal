@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from sensor_portal.sensors.models import Metric, Reading
 
 from .nexmo import verify_webhook
-from .models import Message
+from .models import Message, Number
 
 
 @csrf_exempt
