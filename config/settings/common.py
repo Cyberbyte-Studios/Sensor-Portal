@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = (
 #    'user_sessions', # Better session managment
     'rest_framework',
     'geoposition',
+    'ordered_model',
 
     # Two Factor Apps
     'django_otp',
