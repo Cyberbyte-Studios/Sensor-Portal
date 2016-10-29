@@ -61,5 +61,5 @@ docutils
 argon2-cffi
 git+https://github.com/MightySCollins/django-allauth-2fa.git
 django-otp
-django-invitations
+django-invitations==1.8
 django-ses
