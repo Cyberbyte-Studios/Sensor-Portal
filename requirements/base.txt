@@ -60,6 +60,6 @@ django-filter
 docutils
 argon2-cffi
 git+https://github.com/MightySCollins/django-allauth-2fa.git
-django-otp
+django-otp==0.3.7
 django-invitations
 django-ses==0.8.1
