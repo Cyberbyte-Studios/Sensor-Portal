@@ -18,7 +18,7 @@ TEMPLATES[0]['OPTIONS']['debug'] = False
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Note: This key only used for development and testing.
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='CHANGEME!!!')
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='TESTKEY')
 
 # Mail settings
 # ------------------------------------------------------------------------------
@@ -41,7 +41,8 @@ CACHES = {
 
 # TESTING
 # ------------------------------------------------------------------------------
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+INSTALLED_APPS += ('django_nose', )
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 
 # PASSWORD HASHING
