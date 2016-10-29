@@ -2,3 +2,5 @@ dependencies:
   override:
     - npm install
     - pip install -r requirements/test.txt
+environment:
+  DJANGO_SETTINGS_MODULE: config.settings.test
