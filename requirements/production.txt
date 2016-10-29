@@ -26,4 +26,4 @@ opbeat==3.4.0
 brotlipy
 
 # Stops replacing assets from S3
-collectfast
+collectfast==0.2.3
