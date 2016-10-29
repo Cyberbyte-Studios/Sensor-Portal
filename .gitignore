@@ -63,6 +63,8 @@ sensor_portal/media/
 
 src/
 
+# Code Coverage Cache
+.cache/
 
 staticfiles/
 
