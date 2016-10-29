@@ -13,7 +13,7 @@ def webhook(request):
     # if not verify_webhook(request):
     #     return HttpResponse('403 error')
 
-    number = Number.object.get(number=request.GET.get('to'))
+    number = Number.objects.get(number=request.GET.get('to'))
 
     message = Message(
         nexmo_id=request.GET.get('messageId'),

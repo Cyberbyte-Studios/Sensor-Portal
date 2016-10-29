@@ -1,0 +1,4 @@
+dependencies:
+  override:
+    - npm install
+    - pip install -r requirements/test.txt
