@@ -9,4 +9,4 @@ factory_boy==2.7.0
 # pytest
 pytest-django==3.0.0
 pytest-sugar==0.7.1
-unittest-xml-reporting
+unittest-xml-reporting==2.1.0
