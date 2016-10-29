@@ -32,17 +32,21 @@ urlpatterns = [
 
     # Django Admin, use {% url 'admin:index' %}
     url(r'{}'.format(settings.ADMIN_URL), admin.site.urls),
+    url(r'{}django-ses/'.format(settings.ADMIN_URL), include('django_ses.urls')),
 
-    url(r'{}/password_reset/$'.format(settings.ADMIN_URL), auth_views.password_reset, name='admin_password_reset'),
-    url(r'{}/password_reset/done/$'.format(settings.ADMIN_URL), auth_views.password_reset_done, name='password_reset_done'),
+    url(r'{}password_reset/$'.format(settings.ADMIN_URL), auth_views.password_reset, name='admin_password_reset'),
+    url(r'{}password_reset/done/$'.format(settings.ADMIN_URL), auth_views.password_reset_done, name='password_reset_done'),
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
     # User management
     url(r'^users/', include('sensor_portal.users.urls', namespace='users')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^', include('allauth_2fa.urls')),
 
     url(r'^api/v1/', include(router.urls, namespace='v1')),
+    url(r'^invitations/', include('invitations.urls', namespace='invitations')),
+    url(r'^nexmo/', include('sensor_portal.nexmo.urls', namespace='nexmo')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
