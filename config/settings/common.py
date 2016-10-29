@@ -312,3 +312,11 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
 }
+
+NEXMO_API = {
+    # TODO: Setup lots of API keys and use ENV Vars in docker
+    'SIGNATURE_SECRET': env('NEXMO_SIGNATURE_SECRET', default='None'),
+    'SIGNATURE_VALIDATION': env.bool('NEXMO_SIGNATURE_VALIDATION', False),
+    'API_KEY': env('NEXMO_API_KEY', default='c2ae3656'),
+    'API_SECRET': env('NEXMO_API_SECRET', default='b4839210abcba01a')
+}

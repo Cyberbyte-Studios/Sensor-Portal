@@ -1,57 +1,31 @@
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.utils import IntegrityError
 
 from sensor_portal.sensors.models import Metric, Reading
 
-from .nexmo import verify_webhook
+from .nexmo import verify_webhook, send_error_text, parse_message
 from .models import Message, Number
+from .serializers import MessageSerializer
+import logging
 
+from rest_framework import viewsets
+from rest_framework.renderers import JSONRenderer
 
 @csrf_exempt
 def webhook(request):
-    # if not verify_webhook(request):
-    #     return HttpResponse('403 error')
-
-    number = Number.objects.get(number=request.GET.get('to'))
-
-    message = Message(
-        nexmo_id=request.GET.get('messageId'),
-        to=number,
-        msisdn=request.GET.get('msisdn'),
-        text=request.GET.get('text'),
-        received=request.GET.get('message-timestamp'),
-    )
-
     try:
-        message.full_clean()
-    except ValidationError as e:
-        print(e)
-        return HttpResponse('Invalid Request')
+        serializer = MessageSerializer(data=request.GET)
+        if not serializer.is_valid():
+            return send_error_text(request.GET.get('msisdn'), 'Validation Errors: {}'
+                                   .format(JSONRenderer().render(serializer.error_messages)))
+        message = serializer.save()
 
-    message.save()
+        return parse_message(message)
+    except IntegrityError:
+        return send_error_text(request.GET.get('msisdn'), 'Your message has been sent already')
 
-    metrics = Metric.objects.all()
-    values = message.text.split(',')
-
-    if len(values) != len(metrics) + 1:
-        return HttpResponse('There are not enough values in that text...')
-
-    index = 0
-    readings = []
-    sensor = Sensor.object.get(pk=values[index])
-
-    for metric in metrics:
-        readings.append(Reading(
-            sensor = sensor,
-            message = message,
-            metric = metric,
-            value = values[index],
-        ))
-        index += 1
-
-    print(readings)
-    Reading.objects.bulk_create(readings)
-
-    return HttpResponse('Thanks Nexmo :)')
-
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
