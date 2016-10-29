@@ -1,7 +1,7 @@
 Sensor Portal
 =============
 
-A short description of the project.
+Data goes in data comes out
 
 .. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
      :target: https://github.com/pydanny/cookiecutter-django/
