@@ -3,7 +3,7 @@
 # See http://bitly.com/wheel-building-fails-CPython-35
 # Verified bug on Python 3.5.1
 wheel==0.29.0
-
+Cython
 # Bleeding edge Django
 django==1.10.2
 
@@ -63,3 +63,9 @@ git+https://github.com/MightySCollins/django-allauth-2fa.git
 django-otp==0.3.7
 django-invitations==1.8
 django-ses==0.8.1
+
+# Graphing
+numpy
+pandas
+django-pandas
+bokeh
