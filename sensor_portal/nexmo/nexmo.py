@@ -1,34 +1,86 @@
 import nexmo
-from datetime import datetime
+import logging
+from django.utils import timezone
 from django.conf import settings
-from sensor_portal.sensors.models import Reading, Metric, Site
+from django.http import HttpResponse
+from sensor_portal.sensors.models import Reading, Metric, Sensor
+from sensor_portal.nexmo.models import Message
+
+
+def get_client():
+    nexmo_settings = settings.NEXMO_API
+    return nexmo.Client(
+        key=nexmo_settings['API_KEY'],
+        secret=nexmo_settings['API_SECRET'],
+        signature_secret=nexmo_settings['SIGNATURE_SECRET']
+    )
+
 
 def verify_webhook(body):
-    if not settings.NEXMO_API['WEBHOOK_SIGNATURE_VALIDATION']:
+    if settings.NEXMO_API['SIGNATURE_VALIDATION'] is not True:
         return True
 
-    client = nexmo.Client(signature_secret=settings.NEXMO_API.SIGNATURE_SECRET)
+    if settings.NEXMO_API['SIGNATURE_SECRET'] is None:
+        return True
+
+    client = get_client()
     return client.check_signature(body)
 
-def parse_message(body, message):
-    data = body.split(',')
 
+def parse_message(message):
     metrics = Metric.objects.all()
+    values = message.text.split(',')
 
-    site = Site.objects.get(id=data[0]) #todo: define some magic to make this nicer
-    time = datetime.now() #Do magic date parsing for values 2 and 3
+    if len(metrics) == 0:
+        return send_error_text(message.msisdn, 'No metrics have been added')
+
+    if len(values) != len(metrics) + 1:
+        return send_error_text(message.msisdn, 'You have not provided enough parameters. Here is what you need "{}"'
+                               .format(generate_sample_message()))
+
+    index = 0
     readings = []
+    sensor = Sensor.objects.get(pk=values[index])
 
-    field = 3
     for metric in metrics:
         readings.append(Reading(
-            site=site,
-            value=float(data[field]),
+            sensor=sensor,
             message=message,
             metric=metric,
-            recorded=time
-        )) #can I give it just site?
-
-        field += 1
+#            value=float(values[index]),
+            value=0.0,
+            recorded=timezone.now()
+        ))
+        index += 1
 
     Reading.objects.bulk_create(readings)
+    return HttpResponse('Thanks nexmo :)')
+
+
+def generate_sample_message():
+    metrics = Metric.objects.all()
+    sample = 'site,'
+    for metric in metrics:
+        sample += metric.name + ','
+    return sample
+
+
+def send_error_text(to, text):
+    client = get_client()
+
+    response = client.send_message({
+        'from': 'Sensor Hub',
+        'to': to,
+        'text': text
+    })
+
+    response = response['messages'][0]
+
+    if response['status'] == '0':
+        logging.info('Sent error text to {} with message {}'.format(to, text))
+        if settings.DEBUG:
+            return HttpResponse('It did not work: {}'.format(text))
+        return HttpResponse('It did not work, I have text back why')
+
+    logging.error('Failed to send error text: {}'.format(response['error-text']))
+    return HttpResponse('Something is really broken')

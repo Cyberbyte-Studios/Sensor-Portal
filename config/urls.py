@@ -13,6 +13,7 @@ from django.views.defaults import page_not_found, server_error
 from django.http import HttpResponseServerError
 
 from sensor_portal.sensors.views import SensorViewSet, MetricViewSet, ReadingViewSet
+from sensor_portal.nexmo.views import MessageViewSet
 from rest_framework import routers
 
 admin.site.site_header = 'Sensor Panel Admin'
