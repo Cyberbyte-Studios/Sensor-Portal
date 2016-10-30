@@ -66,6 +66,6 @@ django-ses==0.8.1
 
 # Graphing
 numpy
-pandas
+pandas==0.19.0
 django-pandas
 bokeh
