@@ -115,7 +115,7 @@ def metrics(request):
     for metric in metrics:
         chart = figure(tools=tools)
         chart.title.text = metric.name
-        readings = Reading.objects.filter(sensor=sensor, metric=1)
+        readings = Reading.objects.filter(sensor=sensor, metric=metric)
         df = readings.to_dataframe(index='recorded', fieldnames=['value'])
         source = ColumnDataSource(data=df)
         chart.add_glyph(source, line)
