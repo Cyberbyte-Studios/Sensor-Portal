@@ -4,6 +4,8 @@ from sensor_portal.nexmo.models import Message
 from ordered_model.models import OrderedModel
 from geoposition.fields import GeopositionField
 from django.contrib.sites.models import Site
+from django_pandas.managers import DataFrameManager
+
 
 class Sensor(models.Model):
     name = models.CharField(max_length=100)
@@ -35,6 +37,8 @@ class Reading(models.Model):
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
     value = models.FloatField()
     recorded = models.DateTimeField(default=datetime.now)
+
+    objects = DataFrameManager()
 
     def __str__(self):
         return str(self.id)

@@ -63,3 +63,9 @@ git+https://github.com/MightySCollins/django-allauth-2fa.git
 django-otp==0.3.7
 django-invitations==1.8
 django-ses==0.8.1
+
+# Graphing
+numpy
+pandas
+django-pandas
+bokeh
