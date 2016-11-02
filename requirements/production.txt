@@ -18,7 +18,7 @@ raven==5.31.0
 
 # Opbeat agent for performance monitoring
 # -----------------------------------------
-opbeat==3.5.0
+opbeat==3.5.1
 
 # Stops replacing assets from S3
 collectfast==0.2.3
