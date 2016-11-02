@@ -21,4 +21,4 @@ raven==5.31.0
 opbeat==3.5.0
 
 # Stops replacing assets from S3
-collectfast==0.2.3
+collectfast==0.3.1
