@@ -8,6 +8,7 @@ class Number(models.Model):
     def __str__(self):
         return self.name
 
+
 class Message(models.Model):
     nexmo_id = models.CharField(max_length=16, unique=True)
     to = models.ForeignKey(Number, on_delete=models.CASCADE)

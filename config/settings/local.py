@@ -77,5 +77,5 @@ CELERY_ALWAYS_EAGER = True
 # ------------------------------------------------------------------------------
 
 
-ALLOWED_HOSTS = ['c5071159.ngrok.io', 'localhost']
+ALLOWED_HOSTS = ['c5071159.ngrok.io', 'localhost', '192.168.1.71']
 

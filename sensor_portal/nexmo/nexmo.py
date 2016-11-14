@@ -35,7 +35,7 @@ def parse_message(message):
         return send_error_text(message.msisdn, 'No metrics have been added')
 
     if len(values) != len(metrics) + 1:
-        return send_error_text(message.msisdn, 'You have not provided enough parameters. Here is what you need "{}"'
+        return send_error_text(message.msisdn, 'You have not provided the right parameters. Here is what you need "{}"'
                                .format(generate_sample_message()))
 
     index = 0
@@ -43,15 +43,14 @@ def parse_message(message):
     sensor = Sensor.objects.get(pk=values[index])
 
     for metric in metrics:
+        index += 1
         readings.append(Reading(
             sensor=sensor,
             message=message,
             metric=metric,
             value=float(values[index]),
-#            value=0.0,
             recorded=timezone.now()
         ))
-        index += 1
 
     Reading.objects.bulk_create(readings)
     return HttpResponse('Thanks nexmo :)')
@@ -67,6 +66,7 @@ def generate_sample_message():
 
 def send_error_text(to, text):
     client = get_client()
+    logging.info('Message error: {}'.format(text))
 
     response = client.send_message({
         'from': 'Sensor Hub',
