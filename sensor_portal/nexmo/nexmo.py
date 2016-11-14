@@ -47,8 +47,8 @@ def parse_message(message):
             sensor=sensor,
             message=message,
             metric=metric,
-#            value=float(values[index]),
-            value=0.0,
+            value=float(values[index]),
+#            value=0.0,
             recorded=timezone.now()
         ))
         index += 1

@@ -26,6 +26,7 @@ def webhook(request):
     except IntegrityError:
         return send_error_text(request.GET.get('msisdn'), 'Your message has been sent already')
 
+
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
