@@ -16,7 +16,7 @@ class MetricAdmin(OrderedModelAdmin):
 
 class ReadingAdmin(admin.ModelAdmin):
     date_hierarchy = 'recorded'
-    search_fields = ('id', 'site__name', 'metric__name')
+    search_fields = ('id', 'message__nexmo_id', 'metric__name', 'recorded', 'recorded', 'value', 'sensor__site__name')
     list_filter = ('sensor', 'metric')
     list_display = ('id', 'metric', 'value', 'recorded')
 
