@@ -12,7 +12,7 @@ from django.template import Context, loader
 from django.views.defaults import page_not_found, server_error
 from django.http import HttpResponseServerError
 
-from sensor_portal.sensors.views import SensorViewSet, MetricViewSet, ReadingViewSet, sensor_map, metrics
+from sensor_portal.sensors.views import SensorViewSet, MetricViewSet, ReadingViewSet, sensor_map, metrics, sensor_list, sensor_metrics
 from rest_framework import routers
 
 admin.site.site_header = 'Sensor Panel Admin'
@@ -28,7 +28,9 @@ urlpatterns = [
     url(r'^pages/', include('django.contrib.flatpages.urls')),
 
     url(r'^map/$', sensor_map, name='sensor-map'),
-    url(r'^metrics/$', metrics, name='sensor-metrics'),
+    url(r'^sensors/$', sensor_list, name='sensor-list'),
+    url(r'^metrics/$', metrics, name='all-metrics'),
+    url(r'^metrics/(?P<id>[0-9]+)/$', sensor_metrics, name='sensor-metrics'),
 
 #    url(r'{}/doc/'.format(settings.ADMIN_URL), include('django.contrib.admindocs.urls')).
 

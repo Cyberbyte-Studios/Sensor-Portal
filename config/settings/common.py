@@ -16,6 +16,7 @@ ROOT_DIR = environ.Path(__file__) - 3  # (sensor_portal/config/settings/common.p
 APPS_DIR = ROOT_DIR.path('sensor_portal')
 
 env = environ.Env()
+env.read_env()
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
