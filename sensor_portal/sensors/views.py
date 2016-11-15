@@ -1,4 +1,3 @@
-from django.shortcuts import render, get_list_or_404
 from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.embed import components
@@ -7,6 +6,7 @@ from bokeh.models import (
 )
 
 from django.conf import settings
+from django.shortcuts import render, get_object_or_404
 
 from rest_framework import viewsets
 from rest_framework import filters
@@ -74,6 +74,11 @@ class ReadingViewSet(viewsets.ModelViewSet):
     ordering_fields = ('sensor', 'message', 'metric', 'value', 'recorded')
 
 
+def sensor_list(request):
+    sensors = Sensor.objects.all()
+    return render(request, "sensors/sensor-list.html", {"sensors": sensors})
+
+
 def sensor_map(request):
     sensors = Sensor.objects.all()
 
@@ -108,6 +113,25 @@ def sensor_map(request):
 
 def metrics(request):
     sensor = Sensor.objects.get(pk=1)
+    metrics = Metric.objects.all()
+    tools = "pan,wheel_zoom,box_zoom,reset,save"
+    line = Line(x="recorded", y="value", line_width=2)
+    charts = []
+    for metric in metrics:
+        chart = figure(tools=tools)
+        chart.title.text = metric.name
+        readings = Reading.objects.filter(sensor=sensor, metric=metric)
+        df = readings.to_dataframe(index='recorded', fieldnames=['value'])
+        source = ColumnDataSource(data=df)
+        chart.add_glyph(source, line)
+        charts.append(chart)
+
+    script, div = components(charts)
+    return render(request, "sensors/metrics.html", {"charts": div, "map_js": script})
+
+
+def sensor_metrics(request, id):
+    sensor = get_object_or_404(Sensor, pk=id)
     metrics = Metric.objects.all()
     tools = "pan,wheel_zoom,box_zoom,reset,save"
     line = Line(x="recorded", y="value", line_width=2)
