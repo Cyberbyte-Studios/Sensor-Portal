@@ -115,7 +115,7 @@ def metrics(request):
     sensor = Sensor.objects.get(pk=1)
     metrics = Metric.objects.all()
     tools = "pan,wheel_zoom,box_zoom,reset,save"
-    line = Line(x="recorded", y="value", line_width=2)
+    line = Line(x="recorded", y="value", line_width=2, responsive=True)
     charts = []
     for metric in metrics:
         chart = figure(tools=tools)
@@ -137,9 +137,10 @@ def sensor_metrics(request, id):
     line = Line(x="recorded", y="value", line_width=2)
     charts = []
     for metric in metrics:
-        chart = figure(tools=tools)
+        chart = figure(tools=tools, x_axis_type="datetime", responsive=True)
         chart.title.text = metric.name
         readings = Reading.objects.filter(sensor=sensor, metric=metric)
+
         df = readings.to_dataframe(index='recorded', fieldnames=['value'])
         source = ColumnDataSource(data=df)
         chart.add_glyph(source, line)
