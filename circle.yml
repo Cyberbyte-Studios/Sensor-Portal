@@ -7,3 +7,7 @@ machine:
   environment:
     DJANGO_SETTINGS_MODULE: config.settings.test
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
+
+test:
+  post:
+    - bash <(curl -s https://codecov.io/bash) -t e3d628df-0850-4766-b4c9-78b806d05321
