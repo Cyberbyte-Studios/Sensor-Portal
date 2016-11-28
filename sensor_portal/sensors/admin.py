@@ -17,8 +17,27 @@ class MetricAdmin(OrderedModelAdmin):
 class ReadingAdmin(admin.ModelAdmin):
     date_hierarchy = 'recorded'
     search_fields = ('id', 'message__nexmo_id', 'metric__name', 'recorded', 'recorded', 'value', 'sensor__site__name')
-    list_filter = ('sensor', 'metric')
-    list_display = ('id', 'metric', 'value', 'recorded')
+    list_filter = ('sensor', 'metric', 'hidden')
+    list_display = ('id', 'metric', 'value', 'hidden', 'recorded')
+    actions = ['hide', 'show']
+
+    def hide(self, request, queryset):
+        rows_updated = queryset.update(hidden=True)
+        if rows_updated == 1:
+            message_bit = "1 reading was"
+        else:
+            message_bit = "%s readings were" % rows_updated
+        self.message_user(request, "%s successfully hidden." % message_bit)
+    hide.short_description = "Hide selected readings"
+
+    def show(self, request, queryset):
+        rows_updated = queryset.update(hidden=False)
+        if rows_updated == 1:
+            message_bit = "1 reading was"
+        else:
+            message_bit = "%s readings were" % rows_updated
+        self.message_user(request, "%s successfully shown." % message_bit)
+    show.short_description = "Show selected readings"
 
 
 class ReadingInline(admin.TabularInline):
