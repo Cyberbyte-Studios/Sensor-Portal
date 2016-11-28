@@ -2,7 +2,8 @@ from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.embed import components
 from bokeh.models import (
-    GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool, WheelZoomTool, BoxSelectTool, Line
+    GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool,
+    WheelZoomTool, BoxSelectTool, Line
 )
 
 from django.conf import settings
@@ -15,8 +16,9 @@ import django_filters
 from django_filters.widgets import RangeWidget
 
 from sensor_portal.sensors.models import Sensor, Metric, Reading
-from sensor_portal.sensors.serializers import SensorSerializer, MetricSerializer, ReadingSerializer
-
+from sensor_portal.sensors.serializers import (
+    SensorSerializer, MetricSerializer, ReadingSerializer
+)
 
 FILTERS = (
     filters.DjangoFilterBackend,
@@ -26,14 +28,12 @@ FILTERS = (
 
 
 class SensorFilter(filters.FilterSet):
-
     class Meta:
         model = Sensor
         fields = ('name', 'active', 'description')
 
 
 class MetricFilter(filters.FilterSet):
-
     class Meta:
         model = Metric
         fields = ('name', 'unit', 'eu_limit', 'description')
@@ -66,7 +66,7 @@ class MetricViewSet(viewsets.ModelViewSet):
 
 
 class ReadingViewSet(viewsets.ModelViewSet):
-    queryset = Reading.objects.all()
+    queryset = Reading.objects.filter(hidden=False)
     filter_backends = FILTERS
     filter_class = ReadingFilter
     serializer_class = ReadingSerializer
@@ -82,33 +82,34 @@ def sensor_list(request):
 def sensor_map(request):
     sensors = Sensor.objects.all()
 
+    source = ColumnDataSource(data=dict(
+        lat=[sensor.position.latitude for sensor in sensors],
+        lon=[sensor.position.longitude for sensor in sensors]
+    ))
+
+    script, div = render_map(plot=map_graph(source=source))
+
+    return render(request, "sensors/map.html", {"map_chart": div, "map_js": script})
+
+
+def map_graph(source, title='Sensor Map'):
     map_options = GMapOptions(map_type="roadmap", lat=52.3555177, lng=-1.1743197, zoom=6)
 
     plot = GMapPlot(
-        x_range=DataRange1d(), y_range=DataRange1d(), map_options=map_options, api_key=settings.GEOPOSITION_GOOGLE_MAPS_API_KEY
+        x_range=DataRange1d(), y_range=DataRange1d(), map_options=map_options,
+        api_key=settings.GEOPOSITION_GOOGLE_MAPS_API_KEY
     )
 
-    plot.title.text = 'Sensor Map'
-
-    # TODO: This is nasty, fix it
-    lat = []
-    lon = []
-    for sensor in sensors:
-        lat.append(sensor.position.latitude)
-        lon.append(sensor.position.longitude)
-
-    source = ColumnDataSource(data=dict(
-        lat=lat,
-        lon=lon
-    ))
+    plot.title.text = title
 
     circle = Circle(x="lon", y="lat", size=15, fill_color="blue", fill_alpha=0.8, line_color=None)
     plot.add_glyph(source, circle)
     plot.add_tools(PanTool(), WheelZoomTool(), BoxSelectTool())
 
-    script, div = components(plot, CDN)
 
-    return render(request, "sensors/map.html", {"map_chart": div, "map_js": script})
+def render_map(plot):
+    return components(plot, CDN)
+
 
 def sensor_metrics(request, id):
     sensor = get_object_or_404(Sensor, pk=id)

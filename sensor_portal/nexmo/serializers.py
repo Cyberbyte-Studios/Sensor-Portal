@@ -1,8 +1,8 @@
+import re
+
 from django.utils import timezone
 from rest_framework import serializers
-from .nexmo import send_error_text
 from .models import Message, Number
-import re
 
 
 class NumberSerializer(serializers.ModelSerializer):

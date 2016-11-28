@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.db import models
 from sensor_portal.nexmo.models import Message
 from ordered_model.models import OrderedModel
@@ -36,7 +36,8 @@ class Reading(models.Model):
     message = models.ForeignKey(Message, null=True, blank=True)
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
     value = models.FloatField()
-    recorded = models.DateTimeField(default=datetime.now)
+    recorded = models.DateTimeField(default=timezone.now)
+    hidden = models.BooleanField(default=False)
 
     objects = DataFrameManager()
 
