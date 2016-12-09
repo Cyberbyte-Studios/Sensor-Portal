@@ -75,12 +75,12 @@ class ReadingViewSet(viewsets.ModelViewSet):
 
 
 def sensor_list(request):
-    sensors = Sensor.objects.filter(hidden=False)
+    sensors = Sensor.objects.filter()
     return render(request, "sensors/sensor-list.html", {"sensors": sensors})
 
 
 def sensor_map(request):
-    sensors = Sensor.objects.filter(hidden=False)
+    sensors = Sensor.objects.filter()
 
     source = ColumnDataSource(data=dict(
         lat=[sensor.position.latitude for sensor in sensors],
@@ -110,7 +110,6 @@ def map_graph(source, title='Sensor Map'):
 def render_map(plot):
     return components(plot, CDN)
 
-
 def sensor_metrics(request, id):
     sensor = get_object_or_404(Sensor, pk=id)
     metrics = Metric.objects.all()
@@ -118,7 +117,8 @@ def sensor_metrics(request, id):
     line = Line(x="recorded", y="value", line_width=2)
     charts = []
     for metric in metrics:
-        chart = figure(tools=tools, x_axis_type="datetime", responsive=True)
+        chart = figure(
+            tools=tools, x_axis_type="datetime", x_axis_label="Date", y_axis_label=metric.unit, responsive=True, logo=None)
         chart.title.text = metric.name
         readings = Reading.objects.filter(sensor=sensor, metric=metric, hidden=False)
 
