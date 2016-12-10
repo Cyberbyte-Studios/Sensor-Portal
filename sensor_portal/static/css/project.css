@@ -5572,7 +5572,7 @@ a:hover {
 
 html,
 body {
-  background: url(http://192.168.1.71:3000/static/images/london-air.jpg) no-repeat center center fixed;
+  background: url(https://cdn.urbanairsensors.com/images/london-air.jpg) no-repeat center center fixed;
   background-size: cover;
   height: 100%; }
 
