@@ -75,7 +75,7 @@ class ReadingViewSet(viewsets.ModelViewSet):
 
 
 def sensor_list(request):
-    sensors = Sensor.objects.filter()
+    sensors = Sensor.objects.filter(active=True)
     return render(request, "sensors/sensor-list.html", {"sensors": sensors})
 
 
