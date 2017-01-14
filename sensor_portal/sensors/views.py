@@ -3,8 +3,8 @@ from bokeh.resources import CDN
 from bokeh.embed import components
 from bokeh.models import (
     GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool,
-    WheelZoomTool, BoxSelectTool, Line
-)
+    WheelZoomTool, BoxSelectTool, Line,
+    Span)
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
@@ -110,6 +110,7 @@ def map_graph(source, title='Sensor Map'):
 def render_map(plot):
     return components(plot, CDN)
 
+
 def sensor_metrics(request, id):
     sensor = get_object_or_404(Sensor, pk=id)
     metrics = Metric.objects.all()
@@ -117,15 +118,30 @@ def sensor_metrics(request, id):
     line = Line(x="recorded", y="value", line_width=2)
     charts = []
     for metric in metrics:
-        chart = figure(
-            tools=tools, x_axis_type="datetime", x_axis_label="Date", y_axis_label=metric.unit, responsive=True, logo=None)
-        chart.title.text = metric.name
-        readings = Reading.objects.filter(sensor=sensor, metric=metric, hidden=False)
+        x_axis_label = metric.x_axis or metric.unit
+        y_axis_label = metric.y_axis or "Date"
 
+        chart = figure(
+            tools=tools,
+            x_axis_type="datetime",
+            x_axis_label=x_axis_label,
+            y_axis_label=y_axis_label,
+            logo=None,
+            plot_height=200,
+            sizing_mode="stretch_both"
+        )
+        chart.title.text = metric.title or metric.name
+
+        if metric.eu_limit is not None:
+            eu_limit = Span(location=metric.eu_limit, line_color='red', line_dash='dashed', line_width=3)
+            chart.add_layout(eu_limit)
+
+        readings = Reading.objects.filter(sensor=sensor, metric=metric, hidden=False)
         df = readings.to_dataframe(index='recorded', fieldnames=['value'])
         source = ColumnDataSource(data=df)
         chart.add_glyph(source, line)
+
         charts.append(chart)
 
     script, div = components(charts)
-    return render(request, "sensors/metrics.html", {"charts": div, "map_js": script})
+    return render(request, "sensors/metrics.html", {"sensor": sensor, "charts": div, "map_js": script})

@@ -3,15 +3,16 @@
 {% block title %}Sensor Metrics{% endblock %}
 
 {% block content %}
-  <div class="row">
-    {% for chart in charts %}
-      <div class="col-sm-6">
-        <div class="card card-block">
-          {{ chart|safe }}
-        </div>
-      </div>
-    {% endfor %}
+  <div class="mt-3">
+    <h1>{{ sensor.name }}</h1>
   </div>
+  {% for chart in charts %}
+    <div class="card mb-3">
+      <div class="card-block graph-block">
+        {{ chart|safe }}
+      </div>
+    </div>
+  {% endfor %}
 {% endblock content %}
 
 {% block css %}

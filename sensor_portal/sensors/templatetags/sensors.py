@@ -6,11 +6,12 @@ register = template.Library()
 
 
 @register.simple_tag
-def error_reporting(scheme=None):
+def error_reporting():
+    html = 'console.warn(\'DEBUG = True\')'
     if not settings.DEBUG:
         from raven.contrib.django.models import client
-        dsn = client.get_public_dsn(scheme)
+        dsn = client.get_public_dsn()
         if dsn:
             html = 'Raven.config(\'{}\').install();'.format(dsn)
-            return mark_safe(html)
-    return 'console.warn(\'DEBUG = True\')'
+
+    return mark_safe(html)
