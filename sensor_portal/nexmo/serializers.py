@@ -34,6 +34,6 @@ class MessageSerializer(serializers.Serializer):
             raise serializers.ValidationError('Sent to number not found')
 
     def validate_text(self, value):
-        if re.match("^[0-9,.]*$", value):
+        if re.match("^[0-9,.-]*$", value):
             return value
         raise serializers.ValidationError('Message text contains invalid chars. Allowed: 0-9,.')

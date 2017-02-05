@@ -1,0 +1,14 @@
+Hi
+
+A messaged failed to be parsed for a sensor.
+{% if sensor is not None %}
+Sensor: {{ sensor }}
+{% endif %}
+{% if message is not None %}
+Message: {{ message }}
+{% endif %}
+{{ error }}
+
+This message will be sent per error until disabled by an admin.
+
+Urban Air Sensors

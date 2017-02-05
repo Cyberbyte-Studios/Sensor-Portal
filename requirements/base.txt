@@ -69,4 +69,6 @@ numpy==1.11.2
 pandas==0.19.0
 django-pandas==0.4.1
 bokeh==0.12.3
-django-contact-form
+git+https://github.com/Cyberbyte-Studios/django-csvimport.git
+messytables
+

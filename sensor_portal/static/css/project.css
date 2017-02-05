@@ -6709,3 +6709,10 @@ body {
   height: 300px;
   padding: 4px;
   padding: 0.25rem; }
+
+body > .container {
+  padding: 60px 15px 15px; }
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px; }

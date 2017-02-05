@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = (
     'django_otp.plugins.otp_static',
     'allauth_2fa',
     'invitations',
+    'csvimport.app.CSVImportConf',
 )
 
 # Apps specific for this project go here.

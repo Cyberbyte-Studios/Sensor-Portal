@@ -1,10 +1,12 @@
 import nexmo
 import logging
+
+from django.core.mail import mail_managers
 from django.utils import timezone
 from django.conf import settings
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from sensor_portal.sensors.models import Reading, Metric, Sensor
-from sensor_portal.nexmo.models import Message
 
 
 def get_client():
@@ -32,11 +34,12 @@ def parse_message(message):
     values = message.text.split(',')
 
     if len(metrics) == 0:
-        return send_error_text(message.msisdn, 'No metrics have been added')
+        return handle_nexmo_error('No metrics have been added', to=message.msisdn)
 
-    if len(values) != len(metrics) + 1:
-        return send_error_text(message.msisdn, 'You have not provided the right parameters. Here is what you need "{}"'
-                               .format(generate_sample_message()))
+    if len(values) != len(metrics) + 1:  # One is being added for the site ID
+        return handle_nexmo_error(
+            'Invalid parameters. Here is what you need "{}"'.format(generate_sample_message()),
+            to=message.msisdn)
 
     index = 0
     readings = []
@@ -64,9 +67,27 @@ def generate_sample_message():
     return sample
 
 
+def handle_nexmo_error(text, sensor=None, message=None, to=None):
+    logging.info('Error "{}" parsing message {}'.format(text, message))
+    if True:
+        mail_managers(
+            'Error parsing sensor reading',
+            render_to_string('emails/message_parsing_failed.html', {
+                'sensor': sensor,
+                'message': message,
+                'error': text
+            }),
+            fail_silently=True
+        )
+
+    if False and to is not None:
+        return send_error_text(to, text)
+    return HttpResponse('Handling potential error...')
+
+
 def send_error_text(to, text):
     client = get_client()
-    logging.info('Message error: {}'.format(text))
+    logging.info('Sending error text to {} with message {}.'.format(to, text))
 
     response = client.send_message({
         'from': 'Sensor Hub',
