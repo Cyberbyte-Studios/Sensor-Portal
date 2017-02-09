@@ -8,6 +8,9 @@ from bokeh.models import (
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+
+from datetime import timedelta
 
 from rest_framework import viewsets
 from rest_framework import filters
@@ -128,7 +131,8 @@ def sensor_metrics(request, id):
             y_axis_label=y_axis_label,
             logo=None,
             plot_height=200,
-            sizing_mode="stretch_both"
+            sizing_mode="stretch_both",
+            webgl=True
         )
         chart.title.text = metric.title or metric.name
 
@@ -136,7 +140,8 @@ def sensor_metrics(request, id):
             eu_limit = Span(location=metric.eu_limit, line_color='red', line_dash='dashed', line_width=3)
             chart.add_layout(eu_limit)
 
-        readings = Reading.objects.filter(sensor=sensor, metric=metric, hidden=False)
+        last_week = timezone.now().date() - timedelta(days=7)
+        readings = Reading.objects.filter(sensor=sensor, metric=metric, recorded__gte=last_week, hidden=False)
         df = readings.to_dataframe(index='recorded', fieldnames=['value'])
         source = ColumnDataSource(data=df)
         chart.add_glyph(source, line)
