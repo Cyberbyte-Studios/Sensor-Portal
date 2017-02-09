@@ -39,10 +39,13 @@ class Reading(models.Model):
     message = models.ForeignKey(Message, null=True, blank=True)
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
     value = models.FloatField()
-    recorded = models.DateTimeField(default=timezone.now)
+    recorded = models.DateTimeField(default=timezone.now, db_index=True)
     hidden = models.BooleanField(default=False)
 
     objects = DataFrameManager()
 
     def __str__(self):
         return str(self.pk)
+
+    class Meta:
+        ordering = ['-recorded']
