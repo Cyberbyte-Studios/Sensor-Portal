@@ -290,11 +290,6 @@ STATICFILES_FINDERS += ("compressor.finders.CompressorFinder", )
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = '^admin/'
 
-# Your common stuff: Below this line define 3rd party library settings
-# ------------------------------------------------------------------------------
-
-#SESSION_ENGINE = 'user_sessions.backends.db'
-
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDE5DzzKxdwrLutlDBh1YB56UnsVAJ0ulM'
 
 VERSION = '0.0.3'
@@ -311,7 +306,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.SearchFilter',
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter'
+    ),
 }
 
 NEXMO_API = {
