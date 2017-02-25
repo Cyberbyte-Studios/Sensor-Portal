@@ -3,11 +3,14 @@ from bokeh.resources import CDN
 from bokeh.embed import components
 from bokeh.models import (
     GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool,
-    WheelZoomTool, BoxSelectTool, Line
-)
+    WheelZoomTool, BoxSelectTool, Line,
+    Span)
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+
+from datetime import timedelta
 
 from rest_framework import viewsets
 from rest_framework import filters
@@ -75,12 +78,12 @@ class ReadingViewSet(viewsets.ModelViewSet):
 
 
 def sensor_list(request):
-    sensors = Sensor.objects.filter(hidden=False)
+    sensors = Sensor.objects.filter(active=True)
     return render(request, "sensors/sensor-list.html", {"sensors": sensors})
 
 
 def sensor_map(request):
-    sensors = Sensor.objects.filter(hidden=False)
+    sensors = Sensor.objects.filter()
 
     source = ColumnDataSource(data=dict(
         lat=[sensor.position.latitude for sensor in sensors],
@@ -118,14 +121,32 @@ def sensor_metrics(request, id):
     line = Line(x="recorded", y="value", line_width=2)
     charts = []
     for metric in metrics:
-        chart = figure(tools=tools, x_axis_type="datetime", responsive=True)
-        chart.title.text = metric.name
-        readings = Reading.objects.filter(sensor=sensor, metric=metric, hidden=False)
+        x_axis_label = metric.x_axis or metric.unit
+        y_axis_label = metric.y_axis or "Date"
 
+        chart = figure(
+            tools=tools,
+            x_axis_type="datetime",
+            x_axis_label=x_axis_label,
+            y_axis_label=y_axis_label,
+            logo=None,
+            plot_height=200,
+            sizing_mode="stretch_both",
+            webgl=True
+        )
+        chart.title.text = metric.title or metric.name
+
+        if metric.eu_limit is not None:
+            eu_limit = Span(location=metric.eu_limit, line_color='red', line_dash='dashed', line_width=3)
+            chart.add_layout(eu_limit)
+
+        last_week = timezone.now().date() - timedelta(days=7)
+        readings = Reading.objects.filter(sensor=sensor, metric=metric, recorded__gte=last_week, hidden=False)
         df = readings.to_dataframe(index='recorded', fieldnames=['value'])
         source = ColumnDataSource(data=df)
         chart.add_glyph(source, line)
+
         charts.append(chart)
 
     script, div = components(charts)
-    return render(request, "sensors/metrics.html", {"charts": div, "map_js": script})
+    return render(request, "sensors/metrics.html", {"sensor": sensor, "charts": div, "map_js": script})

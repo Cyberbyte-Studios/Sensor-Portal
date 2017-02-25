@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Urban Air Sensors</h1>
-    <p>Currently Under Construction</p>
+  <h1 class="cover-heading">Urban Air Sensors</h1>
+  <p class="lead">measuring the air around you so we can find solutions to improve it</p>
+  <p class="lead">
+    <a href="{% url 'sensor-list' %}" class="btn btn-lg btn-secondary">View Sensors</a>
+  </p>
 {% endblock content %}

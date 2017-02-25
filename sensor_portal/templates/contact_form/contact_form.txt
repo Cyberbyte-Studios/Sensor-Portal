@@ -1,0 +1,7 @@
+Hi
+
+You have received a message from {{ name }}({{ email }}).
+
+{{ body }}
+
+{{ site.name }}

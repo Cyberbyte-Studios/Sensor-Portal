@@ -45,7 +45,6 @@ THIRD_PARTY_APPS = (
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
     'allauth.socialaccount.providers.github',
-#    'user_sessions', # Better session managment
     'rest_framework',
     'geoposition',
     'ordered_model',
@@ -56,6 +55,7 @@ THIRD_PARTY_APPS = (
     'django_otp.plugins.otp_static',
     'allauth_2fa',
     'invitations',
+    'csvimport.app.CSVImportConf',
 )
 
 # Apps specific for this project go here.
@@ -71,8 +71,8 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
 MIDDLEWARE = (
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.gzip.GZipMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,7 +84,7 @@ MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 # MIGRATIONS CONFIGURATION

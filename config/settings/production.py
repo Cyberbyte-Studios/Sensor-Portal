@@ -37,18 +37,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
 #RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
 #MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
-# opbeat integration
-# See https://opbeat.com/languages/django/
-INSTALLED_APPS += ('opbeat.contrib.django',)
-OPBEAT = {
-    'ORGANIZATION_ID': env('DJANGO_OPBEAT_ORGANIZATION_ID'),
-    'APP_ID': env('DJANGO_OPBEAT_APP_ID'),
-    'SECRET_TOKEN': env('DJANGO_OPBEAT_SECRET_TOKEN')
-}
-MIDDLEWARE = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-) + MIDDLEWARE
-
 
 # SECURITY CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -94,7 +82,7 @@ AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME')
 AWS_AUTO_CREATE_BUCKET = True
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
-AWS_CLOUDFRONT = env('AWS_MEDIA_CDN', default='s3.amazonaws.com/' +  AWS_STORAGE_BUCKET_NAME);
+AWS_CLOUDFRONT = env('AWS_MEDIA_CDN', default='s3.amazonaws.com/' +  AWS_STORAGE_BUCKET_NAME)
 AWS_S3_CUSTOM_DOMAIN = AWS_CLOUDFRONT
 
 # AWS cache settings, don't change unless you know what you're doing:

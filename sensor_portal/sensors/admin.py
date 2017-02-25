@@ -20,6 +20,7 @@ class ReadingAdmin(admin.ModelAdmin):
     list_filter = ('sensor', 'metric', 'hidden')
     list_display = ('id', 'metric', 'value', 'hidden', 'recorded')
     actions = ['hide', 'show']
+    raw_id_fields = ('message',)
 
     def hide(self, request, queryset):
         rows_updated = queryset.update(hidden=True)

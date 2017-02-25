@@ -1,35 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Sensor Map{% endblock %}
+{% block title %}Sensor Metrics{% endblock %}
 
 {% block content %}
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Sensor Metrics</h2>
-        </div>
-    </div>
-    <div class="row col-md-6">
-        {% for chart in charts %}
+  <div class="mt-3">
+    <h1>{{ sensor.name }}</h1>
+  </div>
+  {% for chart in charts %}
+    <div class="card mb-3">
+      <div class="card-block graph-block">
         {{ chart|safe }}
-        {% endfor %}
+      </div>
     </div>
-
-
-</div>
-
+  {% endfor %}
 {% endblock content %}
 
 {% block css %}
-{{ block.super }}
-<link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.css" rel="stylesheet" type="text/css">
-<link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.3.min.css" rel="stylesheet" type="text/css">
+  {{ block.super }}
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.3.min.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block javascript %}
-{{ block.super }}
-<script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
-<script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.3.min.js"></script>
-{{ map_js|safe }}
+  {{ block.super }}
+  <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
+  <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.3.min.js"></script>
+  {{ map_js|safe }}
 {% endblock %}
