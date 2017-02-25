@@ -12,7 +12,7 @@ class Sensor(models.Model):
     position = GeopositionField(null=True, blank=True)
     active = models.BooleanField(default=True)
     description = models.TextField(null=True, blank=True)
-    site = models.ForeignKey(Site, )
+    site = models.ForeignKey(Site, default=1)
 
     def __str__(self):
         return self.name

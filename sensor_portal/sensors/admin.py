@@ -11,7 +11,7 @@ class SensorAdmin(admin.ModelAdmin):
 
 
 class MetricAdmin(OrderedModelAdmin):
-    list_display = ('name', 'unit', 'move_up_down_links')
+    list_display = ('id', 'name', 'unit', 'move_up_down_links')
 
 
 class ReadingAdmin(admin.ModelAdmin):
