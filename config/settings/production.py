@@ -164,7 +164,7 @@ DATABASES = {
 
 # CACHING
 # ------------------------------------------------------------------------------
-REDIS_LOCATION = "redis://{}:{}/0".format(
+REDIS_LOCATION = 'redis://{}:{}/0'.format(
     env('REDIS_ENDPOINT_ADDRESS'),
     env('REDIS_PORT')
 )
@@ -191,7 +191,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'root': {
         'level': 'WARNING',
-        'handlers': ['sentry'],
+        'handlers': ['sentry', ],
     },
     'formatters': {
         'verbose': {
@@ -213,22 +213,22 @@ LOGGING = {
     'loggers': {
         'django.db.backends': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', 'sentry', ],
             'propagate': False,
         },
     },
