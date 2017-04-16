@@ -27,7 +27,6 @@ router.register(r'readings', ReadingViewSet)
 urlpatterns = [
                   url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
                   url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-                  url(r'^contact/', include('contact_form.urls')),
                   url(r'^pages/', include('django.contrib.flatpages.urls')),
 
                   url(r'^map/$', sensor_map, name='sensor-map'),

@@ -12,7 +12,7 @@ class Sensor(models.Model):
     position = GeopositionField(null=True, blank=True)
     active = models.BooleanField(default=True)
     description = models.TextField(null=True, blank=True)
-    site = models.ForeignKey(Site, )
+    site = models.ForeignKey(Site, default=1)
 
     def __str__(self):
         return self.name
@@ -22,6 +22,9 @@ class Metric(OrderedModel):
     name = models.CharField(max_length=100)
     unit = models.CharField(max_length=5)
     eu_limit = models.IntegerField(null=True, blank=True, verbose_name='EU Concentration Limits')
+    title = models.CharField(null=True, blank=True, max_length=100)
+    x_axis = models.CharField(null=True, blank=True, max_length=100)
+    y_axis = models.CharField(null=True, blank=True, max_length=100)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -36,10 +39,13 @@ class Reading(models.Model):
     message = models.ForeignKey(Message, null=True, blank=True)
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
     value = models.FloatField()
-    recorded = models.DateTimeField(default=timezone.now)
+    recorded = models.DateTimeField(default=timezone.now, db_index=True)
     hidden = models.BooleanField(default=False)
 
     objects = DataFrameManager()
 
     def __str__(self):
-        return str(self.id)
+        return str(self.pk)
+
+    class Meta:
+        ordering = ['-recorded']

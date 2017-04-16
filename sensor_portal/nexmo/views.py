@@ -1,10 +1,11 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
 
-from .nexmo import send_error_text, parse_message
+from .nexmo import handle_nexmo_error, parse_message
 from .serializers import MessageSerializer
 
 from rest_framework.exceptions import ValidationError
+
 
 @csrf_exempt
 def webhook(request):
@@ -12,9 +13,16 @@ def webhook(request):
         serializer = MessageSerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
         message = serializer.save()
-
         return parse_message(message)
+
     except IntegrityError:
-        return send_error_text(request.GET.get('msisdn'), 'Your message has been sent already')
+        return handle_nexmo_error(
+            'Your message is already in the database',
+            to=request.GET.get('msisdn'),
+            message=request.GET.get('text'))
+
     except ValidationError as e:
-        return send_error_text(request.GET.get('msisdn'), 'Validation Error: {}'.format(str(e)))
+        return handle_nexmo_error(
+            'Validation Error: {}'.format(str(e)),
+            to=request.GET.get('msisdn'),
+            message=request.GET.get('text'))

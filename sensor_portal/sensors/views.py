@@ -3,11 +3,14 @@ from bokeh.resources import CDN
 from bokeh.embed import components
 from bokeh.models import (
     GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool,
-    WheelZoomTool, BoxSelectTool, Line
-)
+    WheelZoomTool, BoxSelectTool, Line,
+    Span)
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+
+from datetime import timedelta
 
 from rest_framework import viewsets
 from rest_framework import filters
@@ -16,28 +19,7 @@ import django_filters
 from django_filters.widgets import RangeWidget
 
 from sensor_portal.sensors.models import Sensor, Metric, Reading
-from sensor_portal.sensors.serializers import (
-    SensorSerializer, MetricSerializer, ReadingSerializer
-)
-
-FILTERS = (
-    filters.DjangoFilterBackend,
-    filters.SearchFilter,
-    filters.OrderingFilter
-)
-
-
-class SensorFilter(filters.FilterSet):
-    class Meta:
-        model = Sensor
-        fields = ('name', 'active', 'description')
-
-
-class MetricFilter(filters.FilterSet):
-    class Meta:
-        model = Metric
-        fields = ('name', 'unit', 'eu_limit', 'description')
-
+from sensor_portal.sensors.serializers import SensorSerializer, MetricSerializer, ReadingSerializer
 
 class ReadingFilter(filters.FilterSet):
     recorded = django_filters.DateTimeFromToRangeFilter(widget=RangeWidget(attrs={'placeholder': 'dd/mm/yyyy hh:mm'}))
@@ -49,25 +31,24 @@ class ReadingFilter(filters.FilterSet):
 
 class SensorViewSet(viewsets.ModelViewSet):
     queryset = Sensor.objects.all()
-    filter_backends = FILTERS
     filter_class = SensorFilter
     serializer_class = SensorSerializer
     search_fields = ('name', 'position', 'description')
+    filter_fields = ('name', 'position', 'active')
     ordering_fields = ('name', 'position', 'active')
 
 
 class MetricViewSet(viewsets.ModelViewSet):
     queryset = Metric.objects.all()
-    filter_backends = FILTERS
     filter_class = MetricFilter
     serializer_class = MetricSerializer
     search_fields = ('name', 'unit', 'eu_limit', 'description')
+    filter_fields = ('name', 'unit', 'eu_limit')
     ordering_fields = ('name', 'unit', 'eu_limit')
 
 
 class ReadingViewSet(viewsets.ModelViewSet):
     queryset = Reading.objects.filter(hidden=False)
-    filter_backends = FILTERS
     filter_class = ReadingFilter
     serializer_class = ReadingSerializer
     search_fields = ('sensor__name', 'message__text', 'value')
@@ -110,6 +91,7 @@ def map_graph(source, title='Sensor Map'):
 def render_map(plot):
     return components(plot, CDN)
 
+
 def sensor_metrics(request, id):
     sensor = get_object_or_404(Sensor, pk=id)
     metrics = Metric.objects.all()
@@ -117,15 +99,31 @@ def sensor_metrics(request, id):
     line = Line(x="recorded", y="value", line_width=2)
     charts = []
     for metric in metrics:
-        chart = figure(
-            tools=tools, x_axis_type="datetime", x_axis_label="Date", y_axis_label=metric.unit, responsive=True, logo=None)
-        chart.title.text = metric.name
-        readings = Reading.objects.filter(sensor=sensor, metric=metric, hidden=False)
+        x_axis_label = metric.x_axis or metric.unit
+        y_axis_label = metric.y_axis or "Date"
 
+        chart = figure(
+            tools=tools,
+            x_axis_type="datetime",
+            x_axis_label=x_axis_label,
+            y_axis_label=y_axis_label,
+            logo=None,
+            plot_height=200,
+            sizing_mode="stretch_both",
+        )
+        chart.title.text = metric.title or metric.name
+
+        if metric.eu_limit is not None:
+            eu_limit = Span(location=metric.eu_limit, line_color='red', line_dash='dashed', line_width=3)
+            chart.add_layout(eu_limit)
+
+        last_week = timezone.now().date() - timedelta(days=7)
+        readings = Reading.objects.filter(sensor=sensor, metric=metric, recorded__gte=last_week, hidden=False)
         df = readings.to_dataframe(index='recorded', fieldnames=['value'])
         source = ColumnDataSource(data=df)
         chart.add_glyph(source, line)
+
         charts.append(chart)
 
     script, div = components(charts)
-    return render(request, "sensors/metrics.html", {"charts": div, "map_js": script})
+    return render(request, "sensors/metrics.html", {"sensor": sensor, "charts": div, "map_js": script})
