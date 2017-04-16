@@ -8,7 +8,7 @@ Cython==0.25.2
 django==1.10.5
 
 # Configuration
-django-environ==0.4.1
+django-environ==0.4.2
 whitenoise==3.2.2
 
 
