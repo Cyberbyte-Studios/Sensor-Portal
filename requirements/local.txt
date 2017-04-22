@@ -15,7 +15,7 @@ git+https://github.com/jazzband/django-debug-toolbar.git@637b0b73bc684f6ea600dca
 #django-debug-toolbar==1.5
 
 # improved REPL
-ipdb==0.10.2
+ipdb==0.10.3
 
 pytest-django==3.1.2
 pytest-sugar==0.8.0
