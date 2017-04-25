@@ -20,6 +20,7 @@ services:
     command: /start-dev.sh
     depends_on:
       - postgres
+      - mailhog
     environment:
       - POSTGRES_USER=sensor_portal
       - USE_DOCKER=yes
@@ -27,9 +28,9 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    links:
-      - postgres
-      - mailhog
+
+
+
 
   mailhog:
     image: mailhog/mailhog

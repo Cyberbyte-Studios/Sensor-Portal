@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Sensor Portal documentation build configuration file, created by
 # sphinx-quickstart.
 #
@@ -10,8 +8,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
-from __future__ import unicode_literals
 
 import os
 import sys
@@ -44,7 +40,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Sensor Portal'
-copyright = """2016, Sam Collins"""
+copyright = """2017, Sam Collins"""
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

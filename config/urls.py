@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
@@ -66,11 +63,9 @@ if settings.DEBUG:
     ]
     if 'debug_toolbar' in settings.INSTALLED_APPS:
         import debug_toolbar
-
-        urlpatterns += [
+        urlpatterns = [
             url(r'^__debug__/', include(debug_toolbar.urls)),
-        ]
-
+        ] + urlpatterns
 
 def handler500(request):
     t = loader.get_template('500.html')

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Django settings for Sensor Portal project.
 
@@ -8,24 +7,22 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
-from __future__ import absolute_import, unicode_literals
-
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # (sensor_portal/config/settings/common.py - 3 = sensor_portal/)
+ROOT_DIR = environ.Path(__file__) - 3  # (sensor_portal/config/settings/base.py - 3 = sensor_portal/)
 APPS_DIR = ROOT_DIR.path('sensor_portal')
 
+# Load operating system environment variables and then prepare to use them
 env = environ.Env()
 env.read_env('{}/.env'.format(ROOT_DIR))
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
-DJANGO_APPS = (
+DJANGO_APPS = [
     # Default Django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -37,9 +34,8 @@ DJANGO_APPS = (
     'django.contrib.admindocs',
     'django.contrib.flatpages',
     'django.contrib.admin',
-)
-
-THIRD_PARTY_APPS = (
+]
+THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
     'allauth',  # registration
     'allauth.account',  # registration
@@ -56,21 +52,21 @@ THIRD_PARTY_APPS = (
     'allauth_2fa',
     'invitations',
     'csvimport.app.CSVImportConf',
-)
+]
 
 # Apps specific for this project go here.
-LOCAL_APPS = (
+LOCAL_APPS = [
     'sensor_portal.users.apps.UsersConfig',
     'sensor_portal.sensors.apps.SensorsConfig',
     'sensor_portal.nexmo.apps.NexmoConfig',
-)
+]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
-MIDDLEWARE = (
+MIDDLEWARE = [
     # 'django.middleware.cache.UpdateCacheMiddleware',
     # 'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -85,7 +81,7 @@ MIDDLEWARE = (
     'django.contrib.admindocs.middleware.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',
-)
+]
 
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -112,9 +108,9 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.s
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = (
-    ("""Sam Collins""", 'scollins@cyberbyte.org.uk'),
-)
+ADMINS = [
+    ("""Sam Collins""", 'sam@cyberbyte.org.uk'),
+]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
@@ -202,15 +198,15 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     str(APPS_DIR.path('static')),
-)
+]
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
-STATICFILES_FINDERS = (
+STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
+]
 
 # MEDIA CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -227,6 +223,16 @@ ROOT_URLCONF = 'config.urls'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# PASSWORD STORAGE SETTINGS
+# ------------------------------------------------------------------------------
+# See https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
 
 # PASSWORD VALIDATION
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
@@ -249,10 +255,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # AUTHENTICATION CONFIGURATION
 # ------------------------------------------------------------------------------
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-)
+]
 
 # Some really nice defaults
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
@@ -271,24 +277,18 @@ LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
-
-########## CELERY
-INSTALLED_APPS += ('sensor_portal.taskapp.celery.CeleryConfig',)
-# if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
-INSTALLED_APPS += ('kombu.transport.django',)
-BROKER_URL = env('CELERY_BROKER_URL', default='django://')
-if BROKER_URL == 'django://':
-    CELERY_RESULT_BACKEND = 'redis://'
-else:
-    CELERY_RESULT_BACKEND = BROKER_URL
-########## END CELERY
 # django-compressor
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ("compressor", )
-STATICFILES_FINDERS += ("compressor.finders.CompressorFinder", )
+INSTALLED_APPS += ['compressor']
+STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = '^admin/'
+
+# Your common stuff: Below this line define 3rd party library settings
+# ------------------------------------------------------------------------------
+
+#SESSION_ENGINE = 'user_sessions.backends.db'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDE5DzzKxdwrLutlDBh1YB56UnsVAJ0ulM'
 
@@ -306,11 +306,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework.filters.SearchFilter',
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.OrderingFilter'
-    ),
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
 }
 
 NEXMO_API = {

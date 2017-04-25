@@ -16,7 +16,6 @@ services:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile
-    user: django
     depends_on:
       - postgres
       - redis
@@ -34,7 +33,7 @@ services:
       - "0.0.0.0:80:80"
 
     environment:
-      - MY_DOMAIN_NAME=sensor.cyberbyte.org.uk
+      - MY_DOMAIN_NAME=urbanairsensors.com
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
@@ -44,7 +43,7 @@ services:
 
   certbot:
     image: quay.io/letsencrypt/letsencrypt
-    command: bash -c "sleep 6 && certbot certonly -n --standalone -d sensor.cyberbyte.org.uk --text --agree-tos --email you@example.com --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --standalone-supported-challenges http-01"
+    command: bash -c "sleep 6 && certbot certonly -n --standalone -d urbanairsensors.com --text --agree-tos --email sam@cyberbyte.org.uk --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --standalone-supported-challenges http-01"
     entrypoint: ""
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
@@ -57,27 +56,5 @@ services:
 
 
   redis:
-    image: redis:latest
-
-  celeryworker:
-    build:
-      context: .
-      dockerfile: ./compose/django/Dockerfile
-    user: django
-    env_file: .env
-    depends_on:
-     - postgres
-     - redis
-    command: celery -A sensor_portal.taskapp worker -l INFO
-
-  celerybeat:
-    build:
-      context: .
-      dockerfile: ./compose/django/Dockerfile
-    user: django
-    env_file: .env
-    depends_on:
-      - postgres
-      - redis
-    command: celery -A sensor_portal.taskapp beat -l INFO
+    image: redis:3.0
 

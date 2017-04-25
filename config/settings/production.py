@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Production Configurations
 
@@ -9,10 +8,7 @@ Production Configurations
 - Use sentry for error logging
 
 
-- Use opbeat for error reporting
-
 """
-from __future__ import absolute_import, unicode_literals
 
 from boto.s3.connection import OrdinaryCallingFormat
 from django.utils import six
@@ -20,7 +16,7 @@ from django.utils import six
 import logging
 
 
-from .common import *  # noqa
+from .base import *  # noqa
 
 # SECRET CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -33,18 +29,24 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # properly on Heroku.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # raven sentry client
-# See https://docs.getsentry.com/hosted/clients/python/integrations/django/
-INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
-#RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
-#MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
+# See https://docs.sentry.io/clients/python/integrations/django/
+INSTALLED_APPS += ['raven.contrib.django.raven_compat', ]
+
+# Use Whitenoise to serve static files
+# See: https://whitenoise.readthedocs.io/
+WHITENOISE_MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware', ]
+MIDDLEWARE = WHITENOISE_MIDDLEWARE + MIDDLEWARE
+RAVEN_MIDDLEWARE = ['raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware']
+MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
+
 
 # SECURITY CONFIGURATION
 # ------------------------------------------------------------------------------
-# See https://docs.djangoproject.com/en/1.9/ref/middleware/#module-django.middleware.security
-# and https://docs.djangoproject.com/ja/1.9/howto/deployment/checklist/#run-manage-py-check-deploy
+# See https://docs.djangoproject.com/en/dev/ref/middleware/#module-django.middleware.security
+# and https://docs.djangoproject.com/en/dev/howto/deployment/checklist/#run-manage-py-check-deploy
 
 # set this to 60 seconds and then to 518400 when you can prove it works
-SECURE_HSTS_SECONDS = 518400
+SECURE_HSTS_SECONDS = 60
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
     'DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
@@ -60,11 +62,11 @@ X_FRAME_OPTIONS = 'DENY'
 # SITE CONFIGURATION
 # ------------------------------------------------------------------------------
 # Hosts/domain names that are valid for this site
-# See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
+# See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['urbanairsensors.com', 'localhost'])
 # END SITE CONFIGURATION
 
-INSTALLED_APPS += ('gunicorn', )
+INSTALLED_APPS += ['gunicorn', ]
 
 
 # STORAGE CONFIGURATION
@@ -72,9 +74,7 @@ INSTALLED_APPS += ('gunicorn', )
 # Uploaded Media Files
 # ------------------------
 # See: http://django-storages.readthedocs.io/en/latest/index.html
-INSTALLED_APPS += (
-    'storages',
-)
+INSTALLED_APPS += ['storages', ]
 
 AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY')
@@ -82,8 +82,6 @@ AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME')
 AWS_AUTO_CREATE_BUCKET = True
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
-AWS_CLOUDFRONT = env('AWS_MEDIA_CDN', default='s3.amazonaws.com/' +  AWS_STORAGE_BUCKET_NAME)
-AWS_S3_CUSTOM_DOMAIN = AWS_CLOUDFRONT
 
 # AWS cache settings, don't change unless you know what you're doing:
 AWS_EXPIRY = 60 * 60 * 24 * 7
@@ -91,38 +89,25 @@ AWS_EXPIRY = 60 * 60 * 24 * 7
 # TODO See: https://github.com/jschneier/django-storages/issues/47
 # Revert the following and use str after the above-mentioned bug is fixed in
 # either django-storage-redux or boto
+control = 'max-age=%d, s-maxage=%d, must-revalidate' % (AWS_EXPIRY, AWS_EXPIRY)
 AWS_HEADERS = {
-    'Cache-Control': six.b('max-age=%d, s-maxage=%d, must-revalidate' % (
-        AWS_EXPIRY, AWS_EXPIRY))
+    'Cache-Control': bytes(control, encoding='latin-1')
 }
 
 # URL that handles the media served from MEDIA_ROOT, used for managing
 # stored files.
+MEDIA_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
 
-#  See:http://stackoverflow.com/questions/10390244/
-from storages.backends.s3boto import S3BotoStorage
-StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
-MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
-DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3BotoStorage'
-
-MEDIA_URL = 'https://{}/media/'.format(AWS_CLOUDFRONT)
 
 # Static Assets
 # ------------------------
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_URL = 'https://{}/'.format(AWS_CLOUDFRONT)
-STATICFILES_STORAGE = 'sensor_portal.s3utils.CachedS3BotoStorage'
-# See: https://github.com/antonagestam/collectfast
-# For Django 1.7+, 'collectfast' should come before
-# 'django.contrib.staticfiles'
-AWS_PRELOAD_METADATA = True
-INSTALLED_APPS = ('collectfast', ) + INSTALLED_APPS
 # COMPRESSOR
 # ------------------------------------------------------------------------------
 COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 COMPRESS_URL = STATIC_URL
 COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
-
 # EMAIL
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
@@ -149,26 +134,15 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 # DATABASE CONFIGURATION
 # ------------------------------------------------------------------------------
-# Uses Amazon RDS for database hosting, which doesn't follow the Heroku-style spec
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('RDS_DB_NAME'),
-        'USER': env('RDS_USERNAME'),
-        'PASSWORD': env('RDS_PASSWORD'),
-        'HOST': env('RDS_HOSTNAME'),
-        'PORT': env('RDS_PORT'),
-    }
-}
 
+# Use the Heroku-style specification
+# Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
+DATABASES['default'] = env.db('DATABASE_URL')
 
 # CACHING
 # ------------------------------------------------------------------------------
-REDIS_LOCATION = "redis://{}:{}/0".format(
-    env('REDIS_ENDPOINT_ADDRESS'),
-    env('REDIS_PORT')
-)
 
+REDIS_LOCATION = '{0}/{1}'.format(env('REDIS_URL', default='redis://127.0.0.1:6379'), 0)
 # Heroku URL does not pass the DB number, so we parse it in
 CACHES = {
     'default': {
@@ -191,7 +165,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'root': {
         'level': 'WARNING',
-        'handlers': ['sentry'],
+        'handlers': ['sentry', ],
     },
     'formatters': {
         'verbose': {
@@ -213,22 +187,22 @@ LOGGING = {
     'loggers': {
         'django.db.backends': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', ],
             'propagate': False,
         },
     },

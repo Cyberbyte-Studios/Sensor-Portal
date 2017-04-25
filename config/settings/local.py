@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Local settings
 
@@ -12,7 +11,7 @@ Local settings
 
 import socket
 import os
-from .common import *  # noqa
+from .base import *  # noqa
 
 # DEBUG
 # ------------------------------------------------------------------------------
@@ -30,7 +29,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default='&z6wyhj0dt%wtai@xv%59&tp9o9yx!cp-
 
 EMAIL_PORT = 1025
 
-EMAIL_HOST = env("EMAIL_HOST", default='mailhog')
+EMAIL_HOST = env('EMAIL_HOST', default='mailhog')
 
 
 # CACHING
@@ -44,14 +43,14 @@ CACHES = {
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
-MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-INSTALLED_APPS += ('debug_toolbar', )
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
+INSTALLED_APPS += ['debug_toolbar', ]
 
 INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
 # tricks to have debug toolbar when developing with docker
 if os.environ.get('USE_DOCKER') == 'yes':
     ip = socket.gethostbyname(socket.gethostname())
-    INTERNAL_IPS += [ip[:-1] + "1"]
+    INTERNAL_IPS += [ip[:-1] + '1']
 
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [
@@ -62,20 +61,11 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # django-extensions
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ('django_extensions', )
+INSTALLED_APPS += ['django_extensions', ]
 
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-########## CELERY
-# In development, all tasks will be executed locally by blocking until the task returns
-CELERY_ALWAYS_EAGER = True
-########## END CELERY
-
 # Your local stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
-
-
-ALLOWED_HOSTS = ['c5071159.ngrok.io', 'localhost', '192.168.1.71']
-

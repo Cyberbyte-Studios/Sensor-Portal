@@ -2,23 +2,25 @@
 #	production that aren't in development.
 -r base.txt
 
+
+
 # WSGI Handler
 # ------------------------------------------------
-gevent==1.1.2
-gunicorn==19.6.0
+gevent==1.2.1
+gunicorn==19.7.1
 
 # Static and Media Storage
 # ------------------------------------------------
-boto==2.44.0
+boto==2.46.1
 django-storages-redux==1.3.2
+
+
+# Email backends for Mailgun, Postmark, SendGrid and more
+# -------------------------------------------------------
+django-anymail==0.9
 
 # Raven is the Sentry client
 # --------------------------
-raven==5.32.0
+raven==6.0.0
 
-# Opbeat agent for performance monitoring
-# -----------------------------------------
-opbeat==3.5.1
 
-# Stops replacing assets from S3
-collectfast==0.3.1
