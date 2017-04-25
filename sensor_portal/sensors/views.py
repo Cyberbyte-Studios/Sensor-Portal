@@ -31,7 +31,6 @@ class ReadingFilter(filters.FilterSet):
 
 class SensorViewSet(viewsets.ModelViewSet):
     queryset = Sensor.objects.all()
-    filter_class = SensorFilter
     serializer_class = SensorSerializer
     search_fields = ('name', 'position', 'description')
     filter_fields = ('name', 'position', 'active')
@@ -40,7 +39,6 @@ class SensorViewSet(viewsets.ModelViewSet):
 
 class MetricViewSet(viewsets.ModelViewSet):
     queryset = Metric.objects.all()
-    filter_class = MetricFilter
     serializer_class = MetricSerializer
     search_fields = ('name', 'unit', 'eu_limit', 'description')
     filter_fields = ('name', 'unit', 'eu_limit')
