@@ -63,7 +63,7 @@ django-filter==1.0.1
 docutils==0.13.1
 git+https://github.com/MightySCollins/django-allauth-2fa.git
 django-otp==0.3.8
-django-invitations==1.8
+django-invitations==1.9.1
 django-ses==0.8.2
 
 # Graphing
