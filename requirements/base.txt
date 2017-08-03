@@ -60,7 +60,7 @@ django-ordered-model==1.4.1
 djangorestframework==3.5.3
 markdown==2.6.8
 django-filter==1.0.1
-docutils==0.13.1
+docutils==0.14
 git+https://github.com/MightySCollins/django-allauth-2fa.git
 django-otp==0.3.8
 django-invitations==1.8
