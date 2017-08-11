@@ -53,7 +53,7 @@ django-compressor==2.1.1
 
 
 # Your custom requirements go here
-django-user-sessions==1.4.0
+django-user-sessions==1.5.3
 nexmo==1.4.0
 django-geoposition==0.3.0
 django-ordered-model==1.4.1
