@@ -10,6 +10,6 @@ factory-boy==2.8.1
 
 # pytest
 pytest-django==3.1.2
-pytest-sugar==0.8.0
+pytest-sugar==0.9.0
 unittest-xml-reporting==2.1.0
 django-nose==1.4.4
